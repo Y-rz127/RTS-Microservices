@@ -1,0 +1,30 @@
+spring:
+  application:
+    name: train-service
+  datasource:
+    url: jdbc:mysql://mysql:3306/rts_train?useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&characterEncoding=utf8&useUnicode=true
+    username: root
+    password: ${MYSQL_ROOT_PASSWORD:052834}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  cloud:
+    nacos:
+      discovery:
+        server-addr: nacos:8848
+
+seata:
+  enabled: true
+  application-id: train-service
+  tx-service-group: railway-ticket-tx-group
+  service:
+    vgroup-mapping:
+      railway-ticket-tx-group: default
+    grouplist:
+      default: seata-server:8091
+  config:
+    type: file
+  registry:
+    type: file
+
+jwt:
+  secret: railway-ticket-system-secret-key-2024
+  expire: 86400000

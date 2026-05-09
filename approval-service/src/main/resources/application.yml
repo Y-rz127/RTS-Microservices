@@ -1,0 +1,62 @@
+server:
+  port: 8085
+
+spring:
+  application:
+    name: approval-service
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+    sentinel:
+      transport:
+        dashboard: localhost:8080
+        port: 8721
+      eager: true
+    openfeign:
+      sentinel:
+        enabled: true
+  datasource:
+    url: jdbc:mysql://localhost:3306/rts_approval?useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&characterEncoding=utf8&useUnicode=true
+    username: root
+    password: 052834
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+  main:
+    allow-circular-references: true
+
+jwt:
+  secret: railway-ticket-system-secret-key-2024
+  expire: 86400000
+
+mybatis-plus:
+  mapper-locations: classpath*:mapper/*.xml
+  type-aliases-package: com.ticket.model.entity
+  configuration:
+    map-underscore-to-camel-case: true
+
+seata:
+  enabled: true
+  application-id: approval-service
+  tx-service-group: railway-ticket-tx-group
+  config:
+    type: file
+  registry:
+    type: file
+
+app:
+  rabbitmq:
+    enabled: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info

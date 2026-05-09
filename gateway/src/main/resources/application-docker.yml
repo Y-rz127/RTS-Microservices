@@ -1,0 +1,59 @@
+spring:
+  application:
+    name: gateway
+  main:
+    web-application-type: reactive
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+  cloud:
+    nacos:
+      discovery:
+        server-addr: nacos:8848
+    gateway:
+      routes:
+        - id: user-auth
+          uri: lb://user-auth-service
+          predicates:
+            - Path=/api/user/**, /api/log/**, /api/config/**
+        - id: station
+          uri: lb://train-service
+          predicates:
+            - Path=/api/station/**
+        - id: route
+          uri: lb://train-service
+          predicates:
+            - Path=/api/route/**
+        - id: dictionary
+          uri: lb://train-service
+          predicates:
+            - Path=/api/dictionary/**
+        - id: statistics
+          uri: lb://train-service
+          predicates:
+            - Path=/api/statistics/**
+        - id: train
+          uri: lb://train-service
+          predicates:
+            - Path=/api/train/**
+        - id: sales
+          uri: lb://sales-service
+          predicates:
+            - Path=/api/orders/**, /api/pay/**, /api/tickets/**, /api/seats/**, /api/async/**, /api/hot/**, /api/sales/**
+        - id: approval
+          uri: lb://approval-service
+          predicates:
+            - Path=/api/approval/**, /api/operator/approval/**
+        - id: notification
+          uri: lb://notification-service
+          predicates:
+            - Path=/ws/**
+
+jwt:
+  secret: railway-ticket-system-secret-key-2024
+  expire: 86400000
+
+management:
+  health:
+    db:
+      enabled: false

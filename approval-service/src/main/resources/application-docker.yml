@@ -1,0 +1,38 @@
+spring:
+  application:
+    name: approval-service
+  datasource:
+    url: jdbc:mysql://mysql:3306/rts_approval?useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&characterEncoding=utf8&useUnicode=true
+    username: root
+    password: ${MYSQL_ROOT_PASSWORD:052834}
+  rabbitmq:
+    host: rabbitmq
+    port: 5672
+    username: guest
+    password: guest
+  cloud:
+    nacos:
+      discovery:
+        server-addr: nacos:8848
+
+seata:
+  enabled: true
+  application-id: approval-service
+  tx-service-group: railway-ticket-tx-group
+  service:
+    vgroup-mapping:
+      railway-ticket-tx-group: default
+    grouplist:
+      default: seata-server:8091
+  config:
+    type: file
+  registry:
+    type: file
+
+jwt:
+  secret: railway-ticket-system-secret-key-2024
+  expire: 86400000
+
+app:
+  rabbitmq:
+    enabled: true

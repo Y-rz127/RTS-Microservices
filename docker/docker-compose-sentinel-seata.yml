@@ -1,0 +1,49 @@
+version: '3'
+
+services:
+  sentinel-dashboard:
+    image: bladex/sentinel-dashboard:1.8.6
+    container_name: sentinel-dashboard
+    ports:
+      - "8080:8858"
+    environment:
+      - AUTH_USERNAME=sentinel
+      - AUTH_PASSWORD=sentinel
+    networks:
+      - railway-network
+
+  seata-server:
+    image: seataio/seata-server:1.8.0
+    container_name: seata-server
+    ports:
+      - "8091:8091"
+      - "7091:7091"
+    environment:
+      - SEATA_PORT=8091
+      - STORE_MODE=file
+      - LOGGING_FILE_PATH=/seata-server/logs
+    depends_on:
+      - mysql
+    networks:
+      - railway-network
+
+  mysql:
+    image: mysql:8.0
+    container_name: mysql-seata
+    ports:
+      - "3307:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=052834
+      - MYSQL_DATABASE=seata
+    volumes:
+      - mysql-seata-data:/var/lib/mysql
+      - ./seata-sql:/docker-entrypoint-initdb.d
+    networks:
+      - railway-network
+
+networks:
+  railway-network:
+    driver: bridge
+
+volumes:
+  mysql-seata-data:

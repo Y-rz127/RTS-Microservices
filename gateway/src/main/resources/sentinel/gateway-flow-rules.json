@@ -1,0 +1,16 @@
+[
+  {
+    "resource": "/api/tickets/**",
+    "resourceMode": "ROUTE_ID",
+    "grade": 1,
+    "count": 100,
+    "intervalSec": 1
+  },
+  {
+    "resource": "/api/orders/**",
+    "resourceMode": "ROUTE_ID",
+    "grade": 1,
+    "count": 100,
+    "intervalSec": 1
+  }
+]

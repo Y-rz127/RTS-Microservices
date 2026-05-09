@@ -1,0 +1,47 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: gateway
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+    sentinel:
+      transport:
+        dashboard: localhost:8080
+        port: 8717
+      eager: true
+    gateway:
+      routes:
+        - id: user-auth
+          uri: lb://user-auth-service
+          predicates:
+            - Path=/api/user/**, /api/config/**, /api/log/**
+        - id: train
+          uri: lb://train-service
+          predicates:
+            - Path=/api/train/**, /api/station/**, /api/route/**, /api/dictionary/**, /api/statistics/**
+        - id: sales
+          uri: lb://sales-service
+          predicates:
+            - Path=/api/orders/**, /api/pay/**, /api/tickets/**, /api/seats/**, /api/async/**, /api/hot/**, /api/sales/**
+        - id: approval
+          uri: lb://approval-service
+          predicates:
+            - Path=/api/approval/**, /api/operator/approval/**
+        - id: notification
+          uri: lb://notification-service
+          predicates:
+            - Path=/ws/**
+
+jwt:
+  secret: railway-ticket-system-secret-key-2024
+  expire: 86400000
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info

@@ -1,0 +1,50 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: user-auth-service
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+    sentinel:
+      transport:
+        dashboard: localhost:8080
+        port: 8718
+      eager: true
+  datasource:
+    url: jdbc:mysql://localhost:3306/rts_user?useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&characterEncoding=utf8&useUnicode=true
+    username: root
+    password: 052834
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+  main:
+    allow-circular-references: true
+
+mybatis-plus:
+  mapper-locations: classpath*:mapper/*.xml
+  type-aliases-package: com.ticket.model.entity
+  configuration:
+    map-underscore-to-camel-case: true
+
+seata:
+  enabled: true
+  application-id: user-auth-service
+  tx-service-group: railway-ticket-tx-group
+  config:
+    type: file
+  registry:
+    type: file
+
+jwt:
+  secret: railway-ticket-system-secret-key-2024
+  expire: 86400000
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
