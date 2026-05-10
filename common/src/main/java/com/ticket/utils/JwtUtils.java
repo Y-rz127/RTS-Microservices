@@ -65,6 +65,9 @@ public class JwtUtils {
         return extractAllClaims(token).get("userId", String.class);
     }
 
+    /**
+     * 提取用户角色
+     */
     public String extractRole(String token) {
         return extractAllClaims(token).get("role", String.class);
     }

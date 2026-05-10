@@ -343,7 +343,8 @@ public class ApprovalServiceImpl implements ApprovalService {
     /**
      * 转换为详情 DTO 列表。
      */
-    private List<ApprovalRequestDetailDTO> convertToDetailDTOs(List<ApprovalRequest> requests) {
+    private List<ApprovalRequestDetailDTO> convertToDetailDTOs(List<ApprovalRequest> requests)
+    {
         List<ApprovalRequestDetailDTO> dtos = new ArrayList<>();
         for (ApprovalRequest req : requests) {
             ApprovalRequestDetailDTO dto = new ApprovalRequestDetailDTO();

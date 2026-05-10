@@ -14,7 +14,6 @@ import java.util.List;
 
 /**
  * Sentinel 规则配置类。
- * 
  * 功能：
  * 1. 冷启动限流：避免系统冷启动时流量突增导致服务雪崩
  * 2. 慢调用比例熔断：当接口 75% 的调用响应时间超过阈值时触发熔断
@@ -35,7 +34,6 @@ public class SentinelRuleConfig {
 
     /**
      * 初始化流控规则（冷启动限流）。
-     * 
      * 冷启动限流（Warm-up 模式）：
      * - 系统冷启动时，限流阈值从较小值逐渐增加到配置值
      * - 避免冷启动时流量突增导致服务雪崩
@@ -71,7 +69,6 @@ public class SentinelRuleConfig {
 
     /**
      * 初始化熔断规则（75% 慢调用比例熔断）。
-     * 
      * 慢调用比例熔断：
      * - 当接口响应时间超过 maxAllowedRt 的调用比例达到 75% 时触发熔断
      * - 熔断时长：timeWindow（秒）
@@ -82,25 +79,25 @@ public class SentinelRuleConfig {
         List<DegradeRule> rules = new ArrayList<>();
 
         // 购票接口：75% 慢调用熔断，慢调用阈值 500ms
-        rules.add(createSlowCallRatioRule("sellTicket", 500, 0.75, 10, 5, 10000));
+        rules.add(createSlowCallRatioRule("sellTicket", 500, 5));
         
         // 团体购票接口：75% 慢调用熔断，慢调用阈值 1000ms
-        rules.add(createSlowCallRatioRule("groupSellTicket", 1000, 0.75, 10, 10, 10000));
+        rules.add(createSlowCallRatioRule("groupSellTicket", 1000, 10));
         
         // 退票接口：75% 慢调用熔断，慢调用阈值 300ms
-        rules.add(createSlowCallRatioRule("refundTicket", 300, 0.75, 10, 5, 10000));
+        rules.add(createSlowCallRatioRule("refundTicket", 300, 5));
         
         // 团体退票接口：75% 慢调用熔断，慢调用阈值 500ms
-        rules.add(createSlowCallRatioRule("groupRefundTicket", 500, 0.75, 10, 10, 10000));
+        rules.add(createSlowCallRatioRule("groupRefundTicket", 500, 10));
         
         // 改签接口：75% 慢调用熔断，慢调用阈值 500ms
-        rules.add(createSlowCallRatioRule("changeTicket", 500, 0.75, 10, 5, 10000));
+        rules.add(createSlowCallRatioRule("changeTicket", 500, 5));
         
         // 查询座位接口：75% 慢调用熔断，慢调用阈值 200ms
-        rules.add(createSlowCallRatioRule("seatAvailable", 200, 0.75, 10, 3, 10000));
+        rules.add(createSlowCallRatioRule("seatAvailable", 200, 3));
         
         // 热点车次排行榜：75% 慢调用熔断，慢调用阈值 300ms
-        rules.add(createSlowCallRatioRule("salesTopTrains", 300, 0.75, 10, 5, 10000));
+        rules.add(createSlowCallRatioRule("salesTopTrains", 300, 5));
 
         DegradeRuleManager.loadRules(rules);
         log.info("熔断规则加载完成，共 {} 条规则", rules.size());
@@ -127,29 +124,23 @@ public class SentinelRuleConfig {
 
     /**
      * 创建慢调用比例熔断规则。
-     * 
-     * @param resource 资源名称
+     *
+     * @param resource     资源名称
      * @param maxAllowedRt 最大允许响应时间（毫秒）
-     * @param ratio 慢调用比例阈值（0-1）
-     * @param minRequestAmount 最小请求数
-     * @param timeWindow 熔断时长（秒）
-     * @param statIntervalMs 统计时长（毫秒）
+     * @param timeWindow   熔断时长（秒）
      * @return 熔断规则
      */
     private DegradeRule createSlowCallRatioRule(
             String resource,
             int maxAllowedRt,
-            double ratio,
-            int minRequestAmount,
-            int timeWindow,
-            int statIntervalMs) {
+            int timeWindow) {
         DegradeRule rule = new DegradeRule();
         rule.setResource(resource);
         rule.setGrade(RuleConstant.DEGRADE_GRADE_RT);
-        rule.setCount(ratio);
+        rule.setCount(0.75);
         rule.setTimeWindow(timeWindow);
-        rule.setMinRequestAmount(minRequestAmount);
-        rule.setStatIntervalMs(statIntervalMs);
+        rule.setMinRequestAmount(10);
+        rule.setStatIntervalMs(10000);
         rule.setSlowRatioThreshold(maxAllowedRt);
         return rule;
     }
